@@ -1,0 +1,53 @@
+{
+  "name": "table-tr-href",
+  "version": "0.1.0",
+  "description": "Simple library with no dependencies that help you to hide html list items that do not match a pattern",
+  "main": "/dist/ListFilter.min.js",
+  "files": [
+    "dist/*.js"
+  ],
+  "directories": {
+    "example": "examples",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "nyc mocha",
+    "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
+    "dev": "webpack --mode=development",
+    "watch": "webpack --mode=development --watch",
+    "build": "webpack --mode=production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mp3000mp/list-filter.git"
+  },
+  "keywords": [
+    "list",
+    "filter",
+    "search"
+  ],
+  "author": "mp3000mp",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/mp3000mp/list-filter/issues"
+  },
+  "homepage": "https://github.com/mp3000mp/list-filter#readme",
+  "devDependencies": {
+    "autoprefixer": "^9.6.1",
+    "cheerio": "^1.0.0-rc.3",
+    "coveralls": "^3.0.6",
+    "css-loader": "^3.2.0",
+    "eslint": "^6.4.0",
+    "eslint-loader": "^3.0.2",
+    "ignore-styles": "^5.0.1",
+    "jsdom": "^15.1.1",
+    "jsdom-global": "^3.0.2",
+    "mocha": "^6.2.0",
+    "mocha-lcov-reporter": "^1.3.0",
+    "node-sass": "^4.12.0",
+    "nyc": "^14.1.1",
+    "postcss-loader": "^3.0.0",
+    "sass-loader": "^8.0.0",
+    "style-loader": "^1.0.0"
+  }
+}
