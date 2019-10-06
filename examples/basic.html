@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Basic example</title>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="../dist/ListFilter.js"></script>
+</head>
+<body>
+<h1>Basic example</h1>
+
+<label for="my-input">
+    <input id="my-input" type="text" data-list="my-list" placeholder="search" />
+</label>
+<ul>
+    <li>Item A</li>
+    <li>Item B</li>
+</ul>
+
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', function(){
+	ListFilter.init();
+  }, false);
+</script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 const path = require('path');
 
 module.exports = {
-	entry: './src/TableTrHref.js',
+	entry: './src/ListFilter.js',
 	module: {
 		rules: [{
 			exclude: /node_modules/,
@@ -22,7 +22,7 @@ module.exports = {
 		}]
 	},
 	output: {
-		filename: 'TableTrHref.min.js',
+		filename: 'ListFilter.js',
 		path: path.resolve(__dirname, 'dist')
 	}
 };
