@@ -11,14 +11,16 @@
 <label for="my-input">
     <input id="my-input" type="text" data-list="my-list" placeholder="search" />
 </label>
-<ul>
+<ul id="my-list">
     <li>Item A</li>
     <li>Item B</li>
 </ul>
 
 <script type="text/javascript">
   document.addEventListener('DOMContentLoaded', function(){
-	ListFilter.init();
+    let trigger = document.getElementById('my-input');
+    let list = document.getElementById('my-list');
+	ListFilter.init(trigger, list);
   }, false);
 </script>
 </body>
