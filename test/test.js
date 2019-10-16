@@ -14,28 +14,80 @@ describe('ListFilter', function () {
 	let trigger = window.document.getElementById('trigger');
 	let list = window.document.getElementById('my-list');
 	let listElements = list.getElementsByTagName('li');
+
 	describe('#refresh()', function () {
 		// caseSensitive false
 		it('should hide only second element', function () {
 			let oListFilter = new ListFilter(trigger, list, {
-				caseSensitive: false
+				caseSensitive: false,
 			});
 			trigger.value = 'a';
-			console.log(listElements[0].style.display + '-' + listElements[1].style.display);
 			oListFilter.refresh();
-			console.log(listElements[0].style.display + '-' + listElements[1].style.display);
 			assert.deepStrictEqual(listElements[0].style.display,'');
 			assert.deepStrictEqual(listElements[1].style.display,'none');
 		});
 		// caseSensitive true
 		it('should hide all', function () {
 			let oListFilter = new ListFilter(trigger, list, {
-				caseSensitive: true
+				caseSensitive: true,
 			});
 			trigger.value = 'a';
 			oListFilter.refresh();
 			assert.deepStrictEqual(listElements[0].style.display,'none');
 			assert.deepStrictEqual(listElements[1].style.display,'none');
+		});
+		// search in attribute
+		it('should hide only first element', function () {
+			let oListFilter = new ListFilter(trigger, list, {
+				caseSensitive: false,
+				searchInAttribute: 'data-value',
+			});
+			trigger.value = 'a';
+			oListFilter.refresh();
+			assert.deepStrictEqual(listElements[0].style.display,'none');
+			assert.deepStrictEqual(listElements[1].style.display,'');
+		});
+		// onSearch
+		it('should hide all', function () {
+			let i = 0;
+			let oListFilter = new ListFilter(trigger, list, {
+				onSearch: function(searchPattern, element, isMatching){
+					i++;
+					return false;
+				}
+			});
+			trigger.value = 'a';
+			oListFilter.refresh();
+			assert.deepStrictEqual(i, 2);
+			assert.deepStrictEqual(listElements[0].style.display,'none');
+			assert.deepStrictEqual(listElements[1].style.display,'none');
+		});
+		// onAfterSearch
+		it('should return one item', function () {
+			let oListFilter = new ListFilter(trigger, list, {
+				onAfterSearch: function(searchPattern, foundElements){
+					assert.deepStrictEqual(foundElements.length,1);
+				}
+			});
+			trigger.value = 'a';
+			oListFilter.refresh();
+		});
+		// delay
+		it('should wait before hide all', function () {
+			let oListFilter = new ListFilter(trigger, list, {
+				keyupDelay: 100,
+			});
+			trigger.value = '';
+			oListFilter.refresh();
+			trigger.value = 'c';
+			trigger.dispatchEvent(new KeyboardEvent('keyup',{'key':'c'}));
+			//oListFilter.refresh(true);
+			assert.deepStrictEqual(listElements[0].style.display,'');
+			assert.deepStrictEqual(listElements[1].style.display,'');
+			setTimeout(function(){
+				assert.deepStrictEqual(listElements[0].style.display,'none');
+				assert.deepStrictEqual(listElements[1].style.display,'none');
+			},200);
 		});
 	});
 });

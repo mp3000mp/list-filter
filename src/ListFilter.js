@@ -107,40 +107,50 @@ let ListFilter = function (trigger, list, options) {
 	/**
 	 * refresh DOM
 	 */
-	this.refresh = function(){
+	function doRefresh()
+	{
+		matchingLiElements = [];
+		searchPattern = getSearchPattern(trigger.value);
+
+		for(let liElement of listItems){
+			isMatching = testMatch(searchPattern, liElement);
+
+			if(isMatching){
+				matchingLiElements.push(liElement);
+			}
+
+			updateDisplay(liElement, isMatching);
+		}
+
+		if(typeof(options.onAfterSearch) === 'function'){
+			options.onAfterSearch(searchPattern, matchingLiElements);
+		}
+	}
+
+	/**
+	 * refresh DOM
+	 * @param {boolean} [waitDelay=false]
+	 */
+	this.refresh = function(waitDelay){
 		clearTimeout(timeoutOnGoing);
-		setTimeout(function () {
-
-			matchingLiElements = [];
-			searchPattern = getSearchPattern(trigger.value);
-			console.log(searchPattern);
-
-			for(let liElement of listItems){
-				console.log(liElement.innerHTML);
-				isMatching = testMatch(searchPattern, liElement);
-
-				if(isMatching){
-					matchingLiElements.push(liElement);
-				}
-
-				updateDisplay(liElement, isMatching);
-				console.log(liElement.style.display);
-			}
-
-			if(typeof(options.onAfterSearch) === 'function'){
-				options.onAfterSearch(searchPattern, matchingLiElements);
-			}
-		}, options.keyupDelay);
+		if(waitDelay){
+			setTimeout(function () {
+				doRefresh();
+			}, options.keyupDelay);
+		}else{
+			doRefresh();
+		}
 	};
 
 	// event
 	trigger.onkeyup = function(){
-		me.refresh();
+		me.refresh(true);
 	};
 
 };
 
 module.exports = ListFilter;
+/* istanbul ignore next */
 if (typeof window !== 'undefined') {
 	window.ListFilter = ListFilter;
 }
