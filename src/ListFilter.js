@@ -3,72 +3,144 @@
 /**
  * Is launched for each list items
  * @callback onUpdateCallback
- * @param {string} searchValue
- * @param {HTMLElement} listItem
+ * @param {string} searchPattern
+ * @param {HTMLElement} element
  * @param {boolean} isMatching
  * @return boolean
  *
  * Is launched before finish
  * @callback onAfterSearchCallback
- * @param {string} searchValue
+ * @param {string} searchPattern
  * @param {HTMLElement[]} foundElements
  */
 
+
+
 /**
+ * init events for binding the list with trigger
+ * @param {HTMLElement} trigger
+ * @param {HTMLElement} list
+ * @param {object} [options]
+ * @param {boolean} options.caseSensitive
+ * @param {Number} options.keyupDelay
+ * @param {boolean|String} options.searchInAttribute
+ * @param {boolean|onUpdateCallback} options.onSearch
+ * @param {boolean|onAfterSearchCallback} options.onAfterSearch
  * @constructor
  */
-function ListFilter () {
+let ListFilter = function (trigger, list, options) {
+
+	let me = this;
+	let listItems = list.getElementsByTagName('li');
+	let isMatching, matchingLiElements, searchPattern, timeoutOnGoing;
+
+	// options
+	let defaults = {
+		caseSensitive: false,
+		keyupDelay: 50,
+		onAfterSearch: false,
+		onSearch: false,
+		searchInAttribute: false
+	};
+	options = Object.assign(defaults, options);
 
 	/**
-	 * @param {HTMLElement} trigger
-	 * @param {HTMLElement} list
-	 * @param {object} options
-	 * @param {boolean} options.caseSensitive
-	 * @param {Number} options.keyupDelay
-	 * @param {boolean} options.searchInHtml
-	 * @param {onUpdateCallback} options.onSearch
-	 * @param {onAfterSearchCallback} options.onAfterSearch
+	 * @param {String} triggerValue
+	 * @returns {string}
 	 */
-	this.init = (trigger, list, options) => {
-		//let me = this;
-		let timeoutOnGoing;
+	function getSearchPattern(triggerValue)
+	{
+		if(!options.caseSensitive){
+			return triggerValue.toLowerCase();
+		}else{
+			return triggerValue;
+		}
+	}
 
-		// options
-		let defaults = {
-			caseSensitive: false,
-			keyupDelay: 200,
-			onAfterSearchCallback: false,
-			onUpdateCallback: false,
-			searchInHtml: false
-		};
-		options = Object.assign(defaults, options);
+	/**
+	 * @param {HTMLElement} li
+	 * @returns {string}
+	 */
+	function getLiValue(li)
+	{
+		let str;
+		if(options.searchInAttribute === false){
+			str = li.innerHTML;
+		}else{
+			str = li.getAttribute(options.searchInAttribute);
+		}
+		if(!options.caseSensitive){
+			return str.toLowerCase();
+		}else{
+			return str;
+		}
+	}
 
-		// event
-		trigger.onkeyup = function () {
-			clearTimeout(timeoutOnGoing);
-			setTimeout(function () {
-				// todo caseSensitive
-				let regex = new RegExp( `.*${ trigger.value.toLowerCase().trim() }.*`);
-				let listItems = list.getElementsByTagName('li');
-				for(let li of listItems){
-					// todo searchIHtml
-					// todo caseSensitive
-					let match = regex.test(li.innerHTML.toLowerCase());
-					// todo onSearch
-					if(match){
-						li.style.display = '';
-					}else{
-						li.style.display = 'none';
-					}
+	/**
+	 * @param {String} sPattern
+	 * @param {HTMLElement} li
+	 */
+	function testMatch(sPattern, li)
+	{
+		let isMatching;
+		let sValue = getLiValue(li);
+		isMatching = sValue.indexOf(sPattern) >= 0;
+		if(typeof(options.onSearch) === 'function'){
+			isMatching = options.onSearch(sPattern, li, isMatching);
+		}
+		return isMatching;
+	}
+
+	/**
+	 * @param {HTMLElement} li
+	 * @param {boolean} isMatching
+	 */
+	function updateDisplay(li, isMatching)
+	{
+		if(isMatching){
+			li.style.display = '';
+		}else{
+			li.style.display = 'none';
+		}
+	}
+
+	/**
+	 * refresh DOM
+	 */
+	this.refresh = function(){
+		clearTimeout(timeoutOnGoing);
+		setTimeout(function () {
+
+			matchingLiElements = [];
+			searchPattern = getSearchPattern(trigger.value);
+			console.log(searchPattern);
+
+			for(let liElement of listItems){
+				console.log(liElement.innerHTML);
+				isMatching = testMatch(searchPattern, liElement);
+
+				if(isMatching){
+					matchingLiElements.push(liElement);
 				}
-				// todo onAfterSearch
-			}, options.keyupDelay);
-		};
-	};
-}
 
-const oListFilter = new ListFilter();
-module.exports = oListFilter;
+				updateDisplay(liElement, isMatching);
+				console.log(liElement.style.display);
+			}
+
+			if(typeof(options.onAfterSearch) === 'function'){
+				options.onAfterSearch(searchPattern, matchingLiElements);
+			}
+		}, options.keyupDelay);
+	};
+
+	// event
+	trigger.onkeyup = function(){
+		me.refresh();
+	};
+
+};
+
+module.exports = ListFilter;
 if (typeof window !== 'undefined') {
-	window.ListFilter = oListFilter;
+	window.ListFilter = ListFilter;
 }

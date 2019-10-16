@@ -11,7 +11,7 @@
   "extends": "eslint:recommended",
   "rules": {
     "camelcase": "error",
-    "complexity": ["error", 3],
+    "complexity": ["error", 4],
     "eol-last": ["error", "always"],
     "global-require": "error",
     "indent": ["error", "tab"],
@@ -20,7 +20,7 @@
     "max-depth": ["error", 5],
     "max-len": ["error", 120],
     "max-lines": ["error", 500],
-    "max-lines-per-function": ["error", 50],
+    "max-lines-per-function": ["error", 150],
     "max-statements-per-line": ["error", {"max":  1}],
     "no-continue": "error",
     "no-nested-ternary": "error",

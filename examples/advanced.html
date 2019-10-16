@@ -1,3 +1,68 @@
-<h1>todo</h1>
-onSearch pour filter category via un select
-onAfterSearch pour afficher "no data" si 0 results
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Advanced example</title>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="../dist/ListFilter.js"></script>
+    <style>
+        #my-list{
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+<h1>Advanced example</h1>
+
+<label for="my-input">
+    <input id="my-input" type="text" data-list="my-list" placeholder="search" />
+</label>
+<label for="my-select">
+    Color:
+    <select id="my-select">
+        <option value="">All</option>
+        <option value="blue">Blue</option>
+        <option value="red">Red</option>
+    </select>
+</label>
+<ul id="my-list">
+    <li style="background-color: red;">Item A</li>
+    <li style="background-color: blue;">Item B</li>
+    <li style="background-color: red;">Item C</li>
+    <li style="background-color: blue;">Item D</li>
+</ul>
+<span id="my-nodata" style="display: none;">No data</span>
+
+<script type="text/javascript">
+	document.addEventListener('DOMContentLoaded', function(){
+		let trigger = document.getElementById('my-input');
+		let list = document.getElementById('my-list');
+		let select = document.getElementById('my-select');
+		let noData = document.getElementById('my-nodata');
+		let selectValue = '';
+
+		let oListFilter = new ListFilter(trigger, list, {
+			onSearch: function(searchPattern, element, isMatching){
+				if(isMatching){
+					return selectValue === '' || element.style.backgroundColor === selectValue;
+				}else{
+					return false;
+                }
+			},
+            onAfterSearch: function(searchPattern, foundElements){
+				if(foundElements.length === 0){
+					noData.style.display = '';
+                }else{
+					noData.style.display = 'none';
+                }
+            }
+		});
+
+		// tracks select value
+		select.onchange = function(){
+			selectValue = this.value;
+			oListFilter.refresh();
+        };
+	}, false);
+</script>
+</body>
+</html>
