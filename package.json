@@ -1,8 +1,8 @@
 {
   "name": "@mp3000mp/list-filter",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Simple library with no dependencies that help you to hide html list items that do not match a pattern",
-  "main": "/dist/ListFilter.min.js",
+  "main": "/src/ListFilter.js",
   "files": [
     "src",
     "dist"
