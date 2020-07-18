@@ -4,7 +4,8 @@
   "description": "Simple library with no dependencies that help you to hide html list items that do not match a pattern",
   "main": "/dist/ListFilter.min.js",
   "files": [
-    "dist/*.js"
+    "src",
+    "dist"
   ],
   "directories": {
     "example": "examples",
