@@ -31,8 +31,12 @@
 let ListFilter = function (trigger, list, options) {
 
 	let me = this;
-	let listItems = list.getElementsByTagName('li');
-	let isMatching, matchingLiElements, searchPattern, timeoutOnGoing;
+	let isMatching, listItems, matchingLiElements, searchPattern, timeoutOnGoing;
+	if(list.tagName.toLowerCase() === 'ul'){
+		listItems = list.getElementsByTagName('li');
+	}else if(list.tagName.toLowerCase() === 'table'){
+		listItems = list.getElementsByTagName('tr');
+	}
 
 	// options
 	let defaults = {
@@ -65,7 +69,7 @@ let ListFilter = function (trigger, list, options) {
 	{
 		let str;
 		if(options.searchInAttribute === false){
-			str = li.innerHTML;
+			str = li.textContent;
 		}else{
 			str = li.getAttribute(options.searchInAttribute);
 		}

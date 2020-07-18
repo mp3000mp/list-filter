@@ -1,5 +1,5 @@
 # list-filter
-Simple library with no dependencies that help you to hide html list items that do not match a pattern
+Simple library with no dependencies that help you to hide html list items or table rows that do not match a pattern
 
 [![Build Status](https://travis-ci.com/mp3000mp/list-filter.svg?branch=master)](https://travis-ci.com/mp3000mp/list-filter)
 [![Coverage Status](https://coveralls.io/repos/github/mp3000mp/list-filter/badge.svg?branch=master)](https://coveralls.io/github/mp3000mp/list-filter?branch=master)
@@ -26,7 +26,7 @@ Installation
 ------------
 
 ```sh
-npm install --save list-filter
+npm install --save @mp3000mp/list-filter
 ```
 
 
@@ -47,9 +47,9 @@ You have to create a new instance for binding a list to an input trigger
 // on document ready
 document.addEventListener('DOMContentLoaded', function(){
     let trigger = document.getelementById('my-trigger');
-    let list = document.getelementById('my-list');
+    let list = document.getelementById('my-list'); // works with table or ul element
     let options = {};
-    // This will look for input[data-list] in document
+
     let oListFilter = new ListFilter(trigger, list, options);
 });
 ```
