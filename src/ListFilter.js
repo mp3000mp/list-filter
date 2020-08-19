@@ -71,7 +71,7 @@ let ListFilter = function (trigger, list, options) {
 		if(options.searchInAttribute === false){
 			str = li.textContent;
 		}else{
-			str = li.getAttribute(options.searchInAttribute);
+			str = li.getAttribute(options.searchInAttribute) || '';
 		}
 		if(!options.caseSensitive){
 			return str.toLowerCase();
